@@ -1,6 +1,14 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2709
-\cocoatextscaling0\cocoaplatform0{\fonttbl}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+import { IsString, IsInt, Min, Max, IsOptional } from 'class-validator';
+
+export class UpdateReviewDto {
+    
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(5)
+  stars?: number;
+
+  @IsOptional()
+  @IsString()
+  comment?: string;
 }

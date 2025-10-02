@@ -1,4 +1,4 @@
-#How to run
+# How to run
 
 On terminal:
 npm run start:dev

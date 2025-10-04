@@ -33,6 +33,17 @@ export class ReviewService {
   }));
   }
 
+  async findMine(): Promise<any[]> {
+  const reviews = this.reviews.filter(review => review.writer_id === TEST_USER);
+  
+  return reviews.map(review => ({
+    seller_id: review.seller_id,
+    latest_update: review.latest_update.toISOString(),
+    stars: review.stars,
+    comment: review.comment,
+  }));
+  }
+
   async update(reviewId: string, updateReviewDto: UpdateReviewDto): Promise<Review> {
     const review = this.reviews.find(review => review.review_id === reviewId);
     

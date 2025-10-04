@@ -30,6 +30,29 @@ export class ReviewController {
     return this.reviewService.create(createReviewDto);
   }
 
+  @Get('mine')
+  @ApiOperation({ summary: 'get reviews written by user' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'reviews retrieved',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          seller_id: { type: 'string', format: 'uuid' },
+          latest_update: { type: 'string', format: 'date-time' },
+          stars: { type: 'integer', minimum: 0, maximum: 5 },
+          comment: { type: 'string', nullable: true }
+        }
+      }
+    }
+  })
+  @ApiResponse({ status: 500, description: 'internal error' })
+  async getMine() {
+    return this.reviewService.findMine();
+  }
+
   @Get('user/:user_id')
   @ApiOperation({ summary: 'get reviews for specified user' })
   @ApiParam({ name: 'user_id', example: 'c290f1ee-6c54-4b01-90e6-d701748f0851' })

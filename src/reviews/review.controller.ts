@@ -24,7 +24,7 @@ export class ReviewController {
       },
     }
    })
-  @ApiResponse({ status: 200, description: 'review created', type: Review })
+  @ApiResponse({ status: 201, description: 'review created', type: Review })
   @ApiResponse({ status: 400, description: 'invalid input' })
   async create(@Body() createReviewDto: CreateReviewDto) {
     return this.reviewService.create(createReviewDto);

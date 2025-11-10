@@ -2,8 +2,14 @@ FROM node:18-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
 COPY tsconfig.json ./
-RUN npm ci --only=production
+
+# Install all dependencies
+RUN npm ci
+
 COPY . .
-RUN npm run build
+
+# Use npx to run nest build without global install
+RUN npx nest build
+
 EXPOSE 8080
 CMD [ "node", "dist/main.js" ]

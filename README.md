@@ -25,6 +25,18 @@ You could also do this manually by running the following:
 ```./google-cloud-sdk/bin/gcloud auth login```
 ```./google-cloud-sdk/bin/gcloud config set project review-microservice-477813```
 
+#### For users:
+If you are simply using the microservice, you can make the following calls:
+```
+TOKEN=$(./google-cloud-sdk/bin/gcloud auth print-identity-token)
+
+curl -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" \
+    https://review-service-501821163511.us-central1.run.app
+```
+Simply add the desired endpoint to the end of the https link
+
+#### For developers:
 Add the following to your-microservice.service.ts file:
 ```
 import { Injectable } from '@nestjs/common';

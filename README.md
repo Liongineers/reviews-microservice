@@ -11,7 +11,7 @@ http://localhost:3000/doc for documentation
 
 ### How to use version deployed on Cloudrun
 
-⚠️ You will need to be given IAM permissions to do this
+⚠️ You will need to be given IAM permissions to do this  
 ℹ️ All bash commands are run on the same level as google-cloud-sdk folder in documentation
 
 Install and instantiate following instructions here:

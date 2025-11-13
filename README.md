@@ -9,7 +9,7 @@ On browser:
 http://localhost:3000 for application  
 http://localhost:3000/doc for documentation  
 
-### How to use version deployed on Cloudrun
+### How to locally use version deployed on Cloudrun
 
 ⚠️ You will need to be given IAM permissions to do this  
 ℹ️ All bash commands are run on the same level as google-cloud-sdk folder in documentation
@@ -19,11 +19,11 @@ https://cloud.google.com/sdk/docs/install
 
 Running the following should prompt you to log in and choose your project:  
 ```./google-cloud-sdk/bin/gcloud init```  
-The project you should choose is review-microservice-477813
+The project you should choose is cloud-computing-473717
 
 You could also do this manually by running the following:  
 ```./google-cloud-sdk/bin/gcloud auth login```  
-```./google-cloud-sdk/bin/gcloud config set project review-microservice-477813```  
+```./google-cloud-sdk/bin/gcloud config set project cloud-computing-473717```  
 
 #### For users:
 If you are simply using the microservice, you can make the following calls:  
@@ -32,7 +32,7 @@ TOKEN=$(./google-cloud-sdk/bin/gcloud auth print-identity-token)
 
 curl -H "Authorization: Bearer $TOKEN" \
      -H "Content-Type: application/json" \
-    https://review-service-501821163511.us-central1.run.app
+    https://reviews-microservice-471529071641.us-east1.run.app
 ```
 Simply add the desired endpoint to the end of the https link
 
@@ -45,7 +45,7 @@ import { GoogleAuth } from 'google-auth-library';
 @Injectable()
 export class YourMicroserviceService {
   private readonly reviewMicroservice =
-    'https://review-service-501821163511.us-central1.run.app';
+    'https://reviews-microservice-471529071641.us-east1.run.app';
 
   private readonly auth = new GoogleAuth();
 

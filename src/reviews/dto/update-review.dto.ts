@@ -1,14 +1,4 @@
-import { IsString, IsInt, Min, Max, IsOptional } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { CreateReviewDto } from './create-review.dto';
 
-export class UpdateReviewDto {
-    
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(5)
-  stars?: number;
-
-  @IsOptional()
-  @IsString()
-  comment?: string;
-}
+export class UpdateReviewDto extends PartialType(CreateReviewDto) {}

@@ -6,7 +6,7 @@ import { Review } from './entity/review.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
+    /*TypeOrmModule.forRoot({
       type: 'postgres',
       extra: {
         socketPath: '/cloudsql/cloud-computing-473717:us-east1:cloudsql-reviews-db',
@@ -18,7 +18,7 @@ import { Review } from './entity/review.entity';
       synchronize: true,
       logging: true,
     }),
-    TypeOrmModule.forFeature([Review]),
+    TypeOrmModule.forFeature([Review]),*/
   ], 
   controllers: [ReviewController],
   providers: [ReviewService],

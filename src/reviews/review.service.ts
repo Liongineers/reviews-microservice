@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Review } from './entity/review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -8,67 +9,68 @@ const TEST_USER = 'b290f1ee-6c54-4b01-90e6-d701748f0851';
 
 @Injectable()
 export class ReviewService {
-  private reviews: Review[] = [];
+  constructor(
+    @InjectRepository(Review)
+    private readonly reviewRepository: Repository<Review>,
+  ) {}
 
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
-    const review: Review = {
-      review_id: randomUUID(),
+    // Check for duplicate review (writer_id + seller_id unique constraint)
+    const existingReview = await this.reviewRepository.findOne({
+      where: {
+        writer_id: TEST_USER,
+        seller_id: createReviewDto.seller_id,
+      },
+    });
+
+    if (existingReview) {
+      throw new ConflictException('You have already reviewed this seller');
+    }
+
+    const review = this.reviewRepository.create({
       ...createReviewDto,
       writer_id: TEST_USER,
-      latest_update: new Date(),
-    };
+      // created_at and updated_at are automatically set by the database
+    });
     
-    this.reviews.push(review);
-    return review;
+    return await this.reviewRepository.save(review);
   }
 
-  async findBySellerId(sellerId: string): Promise<any[]> {
-  const reviews = this.reviews.filter(review => review.seller_id === sellerId);
-  
-  return reviews.map(review => ({
-    writer_id: review.writer_id,
-    latest_update: review.latest_update.toISOString(),
-    stars: review.stars,
-    comment: review.comment,
-  }));
-  }
-
-  async findMine(): Promise<any[]> {
-  const reviews = this.reviews.filter(review => review.writer_id === TEST_USER);
-  
-  return reviews.map(review => ({
-    seller_id: review.seller_id,
-    latest_update: review.latest_update.toISOString(),
-    stars: review.stars,
-    comment: review.comment,
-  }));
+  async findBySellerId(sellerId: string): Promise<Review[]> {
+    return await this.reviewRepository.find({
+      where: { seller_id: sellerId },
+      order: { created_at: 'DESC' },
+    });
   }
 
   async update(reviewId: string, updateReviewDto: UpdateReviewDto): Promise<Review> {
-    const review = this.reviews.find(review => review.review_id === reviewId);
-    
+    const review = await this.reviewRepository.findOne({
+      where: { review_id: reviewId },
+    });
+
     if (!review) {
-      throw new NotFoundException(`review not found`);
+      throw new NotFoundException(`Review with ID ${reviewId} not found`);
     }
 
-    const reviewIndex = this.reviews.findIndex(review => review.review_id === reviewId);
-    this.reviews[reviewIndex] = {
-      ...this.reviews[reviewIndex],
-      ...updateReviewDto,
-      latest_update: new Date(),
-    };
+    // updated_at will be automatically updated by the database
+    const updatedReview = this.reviewRepository.merge(review, updateReviewDto);
 
-    return this.reviews[reviewIndex];
+    return await this.reviewRepository.save(updatedReview);
   }
 
   async delete(reviewId: string): Promise<void> {
-    const review = this.reviews.find(review => review.review_id === reviewId);
-  
-    if (!review) {
-      throw new NotFoundException(`review not found`);
+    const result = await this.reviewRepository.delete(reviewId);
+    
+    if (result.affected === 0) {
+      throw new NotFoundException(`Review with ID ${reviewId} not found`);
     }
+  }
 
-    const reviewIndex = this.reviews.findIndex(review => review.review_id === reviewId);
-    this.reviews.splice(reviewIndex, 1);
+  // Optional: Get reviews written by current user
+  async findMyReviews(): Promise<Review[]> {
+    return await this.reviewRepository.find({
+      where: { writer_id: TEST_USER },
+      order: { created_at: 'DESC' },
+    });
   }
 }

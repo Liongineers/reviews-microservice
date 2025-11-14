@@ -6,7 +6,7 @@ export class UpdateReviewDto {
   @IsInt()
   @Min(0)
   @Max(5)
-  stars?: number;
+  rating?: number;
 
   @IsOptional()
   @IsString()

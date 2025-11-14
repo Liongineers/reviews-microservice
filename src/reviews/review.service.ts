@@ -1,6 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { Review } from './entity/review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -12,10 +10,6 @@ const TEST_USER = 'b290f1ee-6c54-4b01-90e6-d701748f0851';
 @Injectable()
 export class ReviewService {
   private reviews: Review[] = [];
-  constructor(
-    @InjectRepository(Review)
-    private reviewRepository: Repository<Review>,
-  ) {}
 
   async testDbConnection() {
     const client = new Client({
@@ -42,12 +36,9 @@ export class ReviewService {
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
     const review: Review = {
       review_id: randomUUID(),
+      ...createReviewDto,
       writer_id: TEST_USER,
-      seller_id: createReviewDto.seller_id,
-      rating: createReviewDto.rating,
-      comment: createReviewDto.comment || null,
-      created_at: new Date(),
-      updated_at: new Date(),
+      latest_update: new Date(),
     };
     
     this.reviews.push(review);
@@ -59,8 +50,8 @@ export class ReviewService {
   
   return reviews.map(review => ({
     writer_id: review.writer_id,
-    updated_at: review.updated_at.toISOString(),
-    rating: review.rating,
+    latest_update: review.latest_update.toISOString(),
+    stars: review.stars,
     comment: review.comment,
   }));
   }
@@ -70,8 +61,8 @@ export class ReviewService {
   
   return reviews.map(review => ({
     seller_id: review.seller_id,
-    updated_at: review.updated_at.toISOString(),
-    rating: review.rating,
+    latest_update: review.latest_update.toISOString(),
+    stars: review.stars,
     comment: review.comment,
   }));
   }
@@ -87,7 +78,7 @@ export class ReviewService {
     this.reviews[reviewIndex] = {
       ...this.reviews[reviewIndex],
       ...updateReviewDto,
-      updated_at: new Date(),
+      latest_update: new Date(),
     };
 
     return this.reviews[reviewIndex];

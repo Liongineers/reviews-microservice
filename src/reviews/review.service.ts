@@ -33,28 +33,78 @@ export class ReviewService {
     }
   }
 
-  async create(createReviewDto: CreateReviewDto): Promise<Review> {
-    const review: Review = {
-      review_id: randomUUID(),
-      ...createReviewDto,
-      writer_id: TEST_USER,
-      latest_update: new Date(),
+  async create(createReviewDto: CreateReviewDto): Promise<any> {
+  const client = new Client({
+    host: '/cloudsql/cloud-computing-473717:us-east1:cloudsql-reviews-db',
+    user: 'postgres',
+    password: 'Liongineer1!',
+    database: 'reviewdb',
+    port: 5432,
+  });
+
+  try {
+    await client.connect();
+    
+    // Insert into database
+    const result = await client.query(
+      `INSERT INTO reviews (writer_id, seller_id, rating, comment) 
+       VALUES ($1, $2, $3, $4) 
+       RETURNING review_id, writer_id, seller_id, rating, comment, created_at, updated_at`,
+      [TEST_USER, createReviewDto.seller_id, createReviewDto.stars, createReviewDto.comment]
+    );
+    
+    await client.end();
+    
+    // Return the created review
+    const review = result.rows[0];
+    return {
+      review_id: review.review_id,
+      seller_id: review.seller_id,
+      stars: review.rating, // Map back to 'stars' for API
+      comment: review.comment,
+      latest_update: review.updated_at
     };
     
-    this.reviews.push(review);
-    return review;
+  } catch (error) {
+    console.error('Database insert failed:', error);
+    throw error;
   }
+}
 
   async findBySellerId(sellerId: string): Promise<any[]> {
-  const reviews = this.reviews.filter(review => review.seller_id === sellerId);
-  
-  return reviews.map(review => ({
-    writer_id: review.writer_id,
-    latest_update: review.latest_update.toISOString(),
-    stars: review.stars,
-    comment: review.comment,
-  }));
+  const client = new Client({
+    host: '/cloudsql/cloud-computing-473717:us-east1:cloudsql-reviews-db',
+    user: 'postgres',
+    password: 'Liongineer1!',
+    database: 'reviewdb',
+    port: 5432,
+  });
+
+  try {
+    await client.connect();
+    
+    const result = await client.query(
+      `SELECT writer_id, rating, comment, updated_at 
+       FROM reviews WHERE seller_id = $1 
+       ORDER BY updated_at DESC`,
+      [sellerId]
+    );
+    
+    await client.end();
+    
+    // Map database fields to API response format
+    return result.rows.map(row => ({
+      writer_id: row.writer_id,
+      latest_update: row.updated_at.toISOString(),
+      stars: row.rating, // Map rating to stars
+      comment: row.comment
+    }));
+    
+  } catch (error) {
+    console.error('Database query failed:', error);
+    return [];
   }
+}
 
   async findMine(): Promise<any[]> {
   const reviews = this.reviews.filter(review => review.writer_id === TEST_USER);

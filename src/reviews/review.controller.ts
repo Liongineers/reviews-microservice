@@ -10,6 +10,11 @@ import { Review } from './entity/review.entity';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
+  @Get('test-db')
+  async testDb() {
+    return this.reviewService.testDbConnection();
+  }
+
   @Post()
   @ApiOperation({ summary: 'post new review' })
   @ApiBody({ 

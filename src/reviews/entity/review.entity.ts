@@ -3,6 +3,6 @@ export class Review {
   writer_id: string;
   seller_id: string;
   latest_update: Date;
-  stars: number;
+  rating: number;
   comment?: string;
 }

@@ -18,7 +18,7 @@ export class ReviewController {
       'example input': {
         value: {
           seller_id:'c290f1ee-6c54-4b01-90e6-d701748f0851',
-          rating: 4,
+          stars: 4,
           comment: 'Happy with service.'
         }
       },
@@ -42,7 +42,7 @@ export class ReviewController {
         properties: {
           seller_id: { type: 'string', format: 'uuid' },
           latest_update: { type: 'string', format: 'date-time' },
-          rating: { type: 'integer', minimum: 0, maximum: 5 },
+          stars: { type: 'integer', minimum: 0, maximum: 5 },
           comment: { type: 'string', nullable: true }
         }
       }
@@ -50,7 +50,7 @@ export class ReviewController {
   })
   @ApiResponse({ status: 500, description: 'internal error' })
   async getMine() {
-    return this.reviewService.findMyReviews();
+    return this.reviewService.findMine();
   }
 
   @Get('user/:user_id')
@@ -66,7 +66,7 @@ export class ReviewController {
         properties: {
           writer_id: { type: 'string', format: 'uuid' },
           latest_update: { type: 'string', format: 'date-time' },
-          rating: { type: 'integer', minimum: 0, maximum: 5 },
+          stars: { type: 'integer', minimum: 0, maximum: 5 },
           comment: { type: 'string', nullable: true }
         }
       }
@@ -85,7 +85,7 @@ export class ReviewController {
     examples: {
       'example input': {
         value: {
-          rating: 4,
+          stars: 4,
           comment: 'Happy with service.'
         }
       },

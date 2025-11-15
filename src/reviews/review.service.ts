@@ -35,33 +35,40 @@ export class ReviewService {
   }
 
   async create(createReviewDto: CreateReviewDto): Promise<any> {
-    const client = this.getClient();
-    try {
-      await client.connect();
+  console.log('CREATE METHOD CALLED');
+  const client = this.getClient();
+  try {
+    console.log('Connecting to database...');
+    await client.connect();
+    console.log('Database connected successfully');
+    
+    console.log('Executing INSERT query...');
+    const result = await client.query(
+      `INSERT INTO reviews (writer_id, seller_id, rating, comment) 
+      VALUES ($1, $2, $3, $4) 
+      RETURNING *`, 
+      [TEST_USER, createReviewDto.seller_id, createReviewDto.rating, createReviewDto.comment || null]
+    );
+    
+    console.log('INSERT successful:', result.rows[0]);
+    await client.end();
+    
+    const response = {
+      review_id: result.rows[0].review_id,
+      seller_id: result.rows[0].seller_id,
+      rating: result.rows[0].rating,
+      comment: result.rows[0].comment,
+      latest_update: result.rows[0].updated_at
+    };
+    
+    console.log('Returning response:', response);
+    return response;
       
-      const result = await client.query(
-        `INSERT INTO reviews (writer_id, seller_id, rating, comment) 
-        VALUES ($1, $2, $3, $4) 
-        RETURNING *`, 
-        [TEST_USER, createReviewDto.seller_id, createReviewDto.rating, createReviewDto.comment]
-      );
-      
-      await client.end();
-      
-      const review = result.rows[0];
-      return {
-        review_id: review.review_id,
-        seller_id: review.seller_id,
-        rating: review.rating,
-        comment: review.comment,
-        latest_update: review.updated_at
-      };
-      
-    } catch (error) {
-      console.error('Database insert failed:', error);
-      throw error;
-    }
+  } catch (error) {
+    console.error('CREATE METHOD FAILED:', error);
+    throw error;
   }
+}
 
   async findBySellerId(sellerId: string): Promise<any[]> {
     const client = this.getClient();

@@ -1,6 +1,6 @@
 API-first definition: https://app.swaggerhub.com/apis/columbia-7bc/Reviews/2.0.0
 
-### How to run local version
+## How to run local version
 
 On terminal:
 npm run start:dev
@@ -9,7 +9,7 @@ On browser:
 http://localhost:3000 for application  
 http://localhost:3000/doc for documentation  
 
-### How to locally use version deployed on Cloudrun
+## How to locally use version deployed on Cloudrun
 
 ⚠️ You will need to be given IAM permissions to do this  
 ℹ️ All bash commands are run on the same level as google-cloud-sdk folder in documentation
@@ -25,8 +25,7 @@ You could also do this manually by running the following:
 ```./google-cloud-sdk/bin/gcloud auth login```  
 ```./google-cloud-sdk/bin/gcloud config set project cloud-computing-473717```  
 
-#### For users:
-If you are simply using the microservice, you can make the following calls:  
+You should now be able to run curl commands like so: 
 ```
 TOKEN=$(./google-cloud-sdk/bin/gcloud auth print-identity-token)
 
@@ -34,29 +33,12 @@ curl -H "Authorization: Bearer $TOKEN" \
      -H "Content-Type: application/json" \
     https://reviews-microservice-471529071641.us-east1.run.app
 ```
-Simply add the desired endpoint to the end of the https link
 
-#### For developers:
-Add the following to your-microservice.service.ts file:  
-```
-import { Injectable } from '@nestjs/common';
-import { GoogleAuth } from 'google-auth-library';
+## Endpoint Guide (Cloudshell)
+### Test database connection
+```curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/test-db```
 
-@Injectable()
-export class YourMicroserviceService {
-  private readonly reviewMicroservice =
-    'https://reviews-microservice-471529071641.us-east1.run.app';
-
-  private readonly auth = new GoogleAuth();
-
-  // Example of function you can implement
-  async getReviewsByUser(userId: string) {
-    const client = await this.auth.getIdTokenClient(this.reviewMicroservice);
-    const res = await client.request({
-      url: `${this.reviewMicroservice}/reviews/user/${userId}`,
-      method: 'GET',
-    });
-    return res.data;
-  }
-}
-```
+### Test database connection
+```curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/test-db```

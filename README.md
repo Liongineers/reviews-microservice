@@ -35,10 +35,52 @@ curl -H "Authorization: Bearer $TOKEN" \
 ```
 
 ## Endpoint Guide (Cloudshell)
-### Test database connection
-```curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-  https://reviews-microservice-471529071641.us-east1.run.app/reviews/test-db```
+### Test Database Connection
+```
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/test-db
+```
 
-### Test database connection
-```curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-  https://reviews-microservice-471529071641.us-east1.run.app/reviews/test-db```
+### Create New Review 
+```
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "seller_id": "c290f1ee-6c54-4b01-90e6-d701748f0861",
+    "rating": 4,
+    "comment": "Great service, fast shipping!"
+  }' \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews
+```
+
+### Get My Reviews
+```
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/mine
+```
+
+### Get Reviews for a Seller
+```
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/user/c290f1ee-6c54-4b01-90e6-d701748f0861
+```
+
+### Update a Review
+```
+curl -X PATCH \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rating": 3,
+    "comment": "Ok service, could do better."
+  }' \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/62733e68-9a80-44ac-8bb3-69c660fd6c56
+```
+
+### Delete a Review
+```
+curl -X DELETE \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/62733e68-9a80-44ac-8bb3-69c660fd6c56
+```

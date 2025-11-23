@@ -11,7 +11,7 @@ export class ReviewService {
 
   private getClient() {
     return new Client({
-      host: '34.139.154.93',
+      host: '/cloudsql/cloud-computing-473717:us-east1:cloudsql-reviews-db',
       user: 'postgres', 
       password: 'Liongineer1!',
       database: 'reviewdb',

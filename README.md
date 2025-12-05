@@ -65,7 +65,7 @@ curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
 ### Get Reviews for a Seller
 ```
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-  https://reviews-microservice-471529071641.us-east1.run.app/reviews/user/c290f1ee-6c54-4b01-90e6-d701748f0861
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/user/f97cdd57-1873-4309-808f-04245778025d
 ```
 
 ### Update a Review

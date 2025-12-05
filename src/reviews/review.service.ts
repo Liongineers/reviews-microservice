@@ -53,6 +53,7 @@ export class ReviewService {
       
       const response = {
         review_id: result.rows[0].review_id,
+        writer_id: result.rows[0].writer_id,
         seller_id: result.rows[0].seller_id,
         rating: result.rows[0].rating,
         comment: result.rows[0].comment,

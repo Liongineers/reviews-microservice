@@ -3,6 +3,8 @@ import { IsString, IsInt, Min, Max, IsOptional, IsUUID } from 'class-validator';
 export class CreateReviewDto {
   
   @IsUUID()
+  writer_id: string;
+  @IsUUID()
   seller_id: string;
 
   @IsInt()

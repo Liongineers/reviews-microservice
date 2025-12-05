@@ -3,6 +3,7 @@ API-first definition: https://app.swaggerhub.com/apis/columbia-7bc/Reviews/2.0.0
 ## How to run local version
 
 On terminal:
+npm install
 npm run start:dev
 
 On browser:  
@@ -47,6 +48,7 @@ curl -X POST \
   -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
   -H "Content-Type: application/json" \
   -d '{
+    "writer_id":'aa34a41e-f01d-4728-a853-f3789953ac7b',
     "seller_id": "c290f1ee-6c54-4b01-90e6-d701748f0861",
     "rating": 4,
     "comment": "Great service, fast shipping!"
@@ -54,10 +56,10 @@ curl -X POST \
   https://reviews-microservice-471529071641.us-east1.run.app/reviews
 ```
 
-### Get My Reviews
+### Get Review by a Writer
 ```
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-  https://reviews-microservice-471529071641.us-east1.run.app/reviews/mine
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/writer/aa34a41e-f01d-4728-a853-f3789953ac7b
 ```
 
 ### Get Reviews for a Seller

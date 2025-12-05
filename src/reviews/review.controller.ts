@@ -22,6 +22,7 @@ export class ReviewController {
     examples: {
       'example input': {
         value: {
+          writer_id:'aa34a41e-f01d-4728-a853-f3789953ac7b',
           seller_id:'c290f1ee-6c54-4b01-90e6-d701748f0851',
           rating: 4,
           comment: 'Happy with service.'
@@ -35,8 +36,9 @@ export class ReviewController {
     return this.reviewService.create(createReviewDto);
   }
 
-  @Get('mine')
-  @ApiOperation({ summary: 'get reviews written by user' })
+  @Get('writer/:user_id')
+  @ApiOperation({ summary: 'get reviews by specified user' })
+  @ApiParam({ name: 'user_id', example: 'c290f1ee-6c54-4b01-90e6-d701748f0851' })
   @ApiResponse({ 
     status: 200, 
     description: 'reviews retrieved',
@@ -45,7 +47,7 @@ export class ReviewController {
       items: {
         type: 'object',
         properties: {
-          seller_id: { type: 'string', format: 'uuid' },
+          writer_id: { type: 'string', format: 'uuid' },
           latest_update: { type: 'string', format: 'date-time' },
           rating: { type: 'integer', minimum: 0, maximum: 5 },
           comment: { type: 'string', nullable: true }
@@ -53,9 +55,9 @@ export class ReviewController {
       }
     }
   })
-  @ApiResponse({ status: 500, description: 'internal error' })
-  async getMine() {
-    return this.reviewService.findMine();
+  @ApiResponse({ status: 404, description: 'review not found' })
+  async getByUser(@Param('user_id') userId: string) {
+    return this.reviewService.findBySellerId(userId);
   }
 
   @Get('user/:user_id')
@@ -78,8 +80,8 @@ export class ReviewController {
     }
   })
   @ApiResponse({ status: 404, description: 'review not found' })
-  async getByUser(@Param('user_id') userId: string) {
-    return this.reviewService.findBySellerId(userId);
+  async getByWriter(@Param('user_id') userId: string) {
+    return this.reviewService.findByWriterId(userId);
   }
 
   @Patch(':review_id')

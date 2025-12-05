@@ -3,8 +3,6 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { Client } from 'pg';
 
-const TEST_USER = 'b290f1ee-6c54-4b01-90e6-d701748f0851';
-
 @Injectable()
 export class ReviewService {
   //private reviews: Review[] = [];
@@ -47,7 +45,7 @@ export class ReviewService {
         `INSERT INTO reviews (writer_id, seller_id, rating, comment) 
         VALUES ($1, $2, $3, $4) 
         RETURNING *`, 
-        [TEST_USER, createReviewDto.seller_id, createReviewDto.rating, createReviewDto.comment || null]
+        [createReviewDto.writer_id, createReviewDto.seller_id, createReviewDto.rating, createReviewDto.comment || null]
       );
       
       console.log('INSERT successful:', result.rows[0]);
@@ -97,7 +95,7 @@ export class ReviewService {
     }
   }
 
-  async findMine(): Promise<any[]> {
+  async findByWriterId(writerId: string): Promise<any[]> {
     const client = this.getClient();
     try {
       await client.connect();
@@ -106,7 +104,7 @@ export class ReviewService {
         `SELECT seller_id, rating, comment, updated_at 
         FROM reviews WHERE writer_id = $1 
         ORDER BY updated_at DESC`,
-        [TEST_USER]
+        [writerId]
       );
       
       await client.end();
@@ -129,8 +127,8 @@ export class ReviewService {
       await client.connect();
       
       const checkResult = await client.query(
-        'SELECT review_id FROM reviews WHERE review_id = $1 AND writer_id = $2',
-        [reviewId, TEST_USER]
+        'SELECT review_id FROM reviews WHERE review_id = $1',
+        [reviewId]
       );
       
       if (checkResult.rows.length === 0) {
@@ -185,8 +183,8 @@ export class ReviewService {
       await client.connect();
       
       const checkResult = await client.query(
-        'SELECT review_id FROM reviews WHERE review_id = $1 AND writer_id = $2',
-        [reviewId, TEST_USER]
+        'SELECT review_id FROM reviews WHERE review_id = $1',
+        [reviewId]
       );
       
       if (checkResult.rows.length === 0) {

@@ -110,7 +110,7 @@ export class ReviewService {
       await client.end();
       
       return result.rows.map(row => ({
-        seller_id: row.seller_id,
+        writer_id: row.writer_id,
         latest_update: row.updated_at.toISOString(),
         stars: row.rating,
         comment: row.comment

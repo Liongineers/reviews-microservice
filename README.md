@@ -48,10 +48,10 @@ curl -X POST \
   -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
   -H "Content-Type: application/json" \
   -d '{
-    "writer_id":'aa34a41e-f01d-4728-a853-f3789953ac7b',
-    "seller_id": "c290f1ee-6c54-4b01-90e6-d701748f0861",
-    "rating": 4,
-    "comment": "Great service, fast shipping!"
+    "writer_id": "aa34a41e-f01d-4728-a853-f3789953ac7b",
+    "seller_id": "f97cdd57-1873-4309-808f-04245778025d",
+    "rating": 2,
+    "comment": "Terrible service."
   }' \
   https://reviews-microservice-471529071641.us-east1.run.app/reviews
 ```

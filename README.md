@@ -49,9 +49,9 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
     "writer_id": "aa34a41e-f01d-4728-a853-f3789953ac7b",
-    "seller_id": "f97cdd57-1873-4309-808f-04245778025d",
-    "rating": 2,
-    "comment": "Terrible service."
+    "seller_id": "0bca48a2-fc00-4c4b-abfe-47f8c60e5a4c",
+    "rating": 3,
+    "comment": "OK service."
   }' \
   https://reviews-microservice-471529071641.us-east1.run.app/reviews
 ```
@@ -65,7 +65,7 @@ curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
 ### Get Reviews for a Seller
 ```
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-  https://reviews-microservice-471529071641.us-east1.run.app/reviews/user/f97cdd57-1873-4309-808f-04245778025d
+  https://reviews-microservice-471529071641.us-east1.run.app/reviews/seller/f97cdd57-1873-4309-808f-04245778025d
 ```
 
 ### Update a Review

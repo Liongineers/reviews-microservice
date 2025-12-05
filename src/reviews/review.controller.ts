@@ -47,7 +47,7 @@ export class ReviewController {
       items: {
         type: 'object',
         properties: {
-          writer_id: { type: 'string', format: 'uuid' },
+          seller_id: { type: 'string', format: 'uuid' },
           latest_update: { type: 'string', format: 'date-time' },
           rating: { type: 'integer', minimum: 0, maximum: 5 },
           comment: { type: 'string', nullable: true }
@@ -57,10 +57,10 @@ export class ReviewController {
   })
   @ApiResponse({ status: 404, description: 'review not found' })
   async getByUser(@Param('user_id') userId: string) {
-    return this.reviewService.findBySellerId(userId);
+    return this.reviewService.findByWriterId(userId);
   }
 
-  @Get('user/:user_id')
+  @Get('seller/:user_id')
   @ApiOperation({ summary: 'get reviews for specified user' })
   @ApiParam({ name: 'user_id', example: 'c290f1ee-6c54-4b01-90e6-d701748f0851' })
   @ApiResponse({ 
@@ -80,8 +80,8 @@ export class ReviewController {
     }
   })
   @ApiResponse({ status: 404, description: 'review not found' })
-  async getByWriter(@Param('user_id') userId: string) {
-    return this.reviewService.findByWriterId(userId);
+  async getBySeller(@Param('user_id') userId: string) {
+    return this.reviewService.findBySellerId(userId);
   }
 
   @Patch(':review_id')

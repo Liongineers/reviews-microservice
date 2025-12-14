@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { Client } from 'pg';
@@ -64,7 +64,14 @@ export class ReviewService {
       return response;
         
     } catch (error) {
+      await client.end();
       console.error('CREATE METHOD FAILED:', error);
+      
+      // Handle duplicate review constraint
+      if (error.code === '23505' && error.constraint === 'reviews_writer_id_seller_id_key') {
+        throw new ConflictException('You have already reviewed this seller. Please update your existing review instead.');
+      }
+      
       throw error;
     }
   }
